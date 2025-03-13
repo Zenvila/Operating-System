@@ -1,25 +1,21 @@
-#include <pthread.h> 
-#include <stdio.h> 
-#include<stdlib.h>
-#define NUM_THREADS 5
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
 
-void * PrintHello(void *threadid) 
-{   printf("\n%d: Hello World!\n", threadid);
-    pthread_exit(NULL); 
+int main() {
+    int fd = open("example.txt", O_RDONLY);
+    if (fd == -1) {
+        perror("Error opening file");
+        return 1;
+    }
+
+    char buffer[100];
+    int bytesRead = read(fd, buffer, sizeof(buffer));
+    if (bytesRead > 0) {
+        write(STDOUT_FILENO, buffer, bytesRead);
+    }
+
+    close(fd);
+    return 0;
 }
 
-int main() 
-{
-   pthread_t threads[NUM_THREADS]; 
-   int rc, t; 
-   for(t=0;t < NUM_THREADS;t++)
-  { 
-    printf("Creating thread %d\n", t); 
-    rc = pthread_create(&threads[t], NULL, PrintHello, (void *)&t);
-    if (rc)
-    { 
-        printf("ERROR; return code from pthread_create() is %d\n", rc); 
-        exit(-1);
-    } 
- } 
-pthread_exit(NULL); } 
