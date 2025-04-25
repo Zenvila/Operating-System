@@ -1,13 +1,9 @@
-# Makefile
+all:
+	gcc -o pmms pmms.c
 
-CC=gcc
-CFLAGS=-Wall -g
-TARGET=my_strace
-
-all: $(TARGET)
-
-$(TARGET): my_strace.c
-	$(CC) $(CFLAGS) -o $(TARGET) my_strace.c
+run: all
+	chmod +x pmms-monitor.sh
+	./pmms-monitor.sh
 
 clean:
-	rm -f $(TARGET)
+	rm -f pmms pmms.log
